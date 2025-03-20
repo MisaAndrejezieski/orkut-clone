@@ -60,3 +60,6 @@ app.use((err, req, res, next) => {
     console.error(err.stack); // Log do erro no console
     res.status(500).json({ message: 'Erro no servidor.' });
 });
+
+const helmet = require('helmet');
+app.use(helmet());

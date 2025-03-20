@@ -1,20 +1,22 @@
 {
-  "name": "orkut-clone",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend do Orkut Clone usando Firebase Admin SDK",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js", // Inicia o servidor
+    "dev": "nodemon server.js", // Inicia o servidor em modo de desenvolvimento (com nodemon)
+    "test": "jest" // Executa os testes com Jest
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.1"
+    "express": "^4.18.2", // Framework para criar o servidor
+    "firebase-admin": "^11.10.1", // Firebase Admin SDK
+    "cors": "^2.8.5", // Middleware para permitir requisições de diferentes origens
+    "dotenv": "^16.3.1" // Para gerenciar variáveis de ambiente
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2", // Reinicia o servidor automaticamente durante o desenvolvimento
+    "jest": "^29.7.0", // Framework de testes
+    "supertest": "^6.3.3" // Para testar rotas HTTP
   }
 }

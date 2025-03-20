@@ -46,7 +46,9 @@
           alert(data.message || 'Cadastro realizado com sucesso! Faça login para continuar.');
           window.location.href = 'index.html'; // Redireciona para a página de login
         } else {
-          alert(data.message || 'Erro ao realizar cadastro.');
+          const errorData = await response.json();
+          alert(errorData.message || 'Erro ao realizar cadastro.');
+          return;
         }
       } catch (error) {
         alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');

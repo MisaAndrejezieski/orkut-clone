@@ -37,11 +37,14 @@ const register = async (req, res) => {
 // Login de usuário
 const login = async (req, res) => {
     const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: 'E-mail e senha são obrigatórios.' });
+    }
     try {
         const userRecord = await admin.auth().getUserByEmail(email);
         res.json({ uid: userRecord.uid, email: userRecord.email });
     } catch (error) {
-        res.status(400).json({ message: 'Credenciais inválidas.' });
+        res.status(400).json({ message: 'Credenciais inválidas ou usuário não encontrado.' });
     }
 };
 

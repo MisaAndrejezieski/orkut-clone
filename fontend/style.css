@@ -5,7 +5,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: auto; /* Ajuste para evitar problemas em telas menores */
+    min-height: 100vh; /* Garante que o conteúdo ocupe a altura mínima */
+    padding: 10px; /* Adiciona espaçamento em telas menores */
     margin: 0;
 }
 
@@ -15,7 +17,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     width: 100%;
-    max-width: 500px; /* Alterado para 500px para maior largura em telas maiores */
+    max-width: 500px; /* Limita a largura máxima */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra mais visível */
     text-align: center;
     font-size: 14px;

@@ -16,17 +16,18 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             body: JSON.stringify({ email, password }),
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            alert('Login bem-sucedido!');
-            localStorage.setItem('user', JSON.stringify(data)); // Salva informações do usuário
-            window.location.href = 'profile.html'; // Redireciona para o perfil
-        } else {
-            alert(data.message || 'Erro ao fazer login. Verifique suas credenciais.');
+        if (!response.ok) {
+            const errorData = await response.json();
+            alert(errorData.message || 'Erro ao fazer login. Verifique suas credenciais.');
+            return;
         }
+
+        const data = await response.json();
+        alert('Login bem-sucedido!');
+        localStorage.setItem('user', JSON.stringify(data)); // Salva informações do usuário
+        window.location.href = 'profile.html'; // Redireciona para o perfil
     } catch (error) {
-        alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');
+        alert('Erro ao conectar ao servidor. Verifique se o backend está rodando.');
         console.error('Erro:', error);
     }
 });

@@ -51,3 +51,6 @@ app.use('/api/communities', communityRoutes);
 
 const friendRoutes = require('./routes/friendRoutes');
 app.use('/api/friends', friendRoutes);
+
+const messageRoutes = require('./routes/messageRoutes');
+app.use('/api/messages', messageRoutes);

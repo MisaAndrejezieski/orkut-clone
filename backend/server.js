@@ -42,3 +42,6 @@ const PORT = process.env.PORT || 5000;
 
 // Inicia o servidor e escuta na porta definida
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+
+const testimonialRoutes = require('./routes/testimonialRoutes');
+app.use('/api/testimonials', testimonialRoutes);

@@ -54,3 +54,9 @@ app.use('/api/friends', friendRoutes);
 
 const messageRoutes = require('./routes/messageRoutes');
 app.use('/api/messages', messageRoutes);
+
+// Middleware de tratamento de erros global
+app.use((err, req, res, next) => {
+    console.error(err.stack); // Log do erro no console
+    res.status(500).json({ message: 'Erro no servidor.' });
+});

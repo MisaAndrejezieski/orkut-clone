@@ -48,3 +48,6 @@ app.use('/api/testimonials', testimonialRoutes);
 
 const communityRoutes = require('./routes/communityRoutes');
 app.use('/api/communities', communityRoutes);
+
+const friendRoutes = require('./routes/friendRoutes');
+app.use('/api/friends', friendRoutes);

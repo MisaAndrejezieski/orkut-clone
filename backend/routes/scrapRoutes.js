@@ -1,29 +1,14 @@
+// backend/routes/scrapRoutes.js
 const express = require('express');
-const { body, validationResult } = require('express-validator');
-const { createScrap } = require('../controllers/scrapController');
+const { createScrap, getScraps } = require('../controllers/scrapController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Rota para criar scrap com validação e autenticação
-router.post(
-    '/',
-    authMiddleware, // Middleware de autenticação
-    [
-        // Validação do campo "content"
-        body('content').notEmpty().withMessage('Conteúdo é obrigatório'),
-    ],
-    (req, res) => {
-        // Verifica se há erros de validação
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+// Rota para criar scrap
+router.post('/', authMiddleware, createScrap);
 
-        // Se não houver erros, chama o controlador de criar scrap
-        createScrap(req, res);
-    }
-);
-
+// Rota para listar scraps
+router.get('/', getScraps);
 
 module.exports = router;

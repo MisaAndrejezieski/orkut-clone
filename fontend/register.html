@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miskut - Cadastro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 style="color: #FF69B4;">Crie sua conta no Miskut!</h1>
+    <form id="register-form" aria-label="Formulário de Cadastro">
+      <label for="name">Nome</label>
+      <input type="text" id="name" placeholder="Digite seu nome" required>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="Digite seu e-mail" required>
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="Digite sua senha" required>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já tem uma conta? <a href="index.html">Faça login aqui</a>.</p>
+  </div>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!name || !email || !password) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5500/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Cadastro realizado com sucesso! Faça login para continuar.');
+          window.location.href = 'index.html'; // Redireciona para a página de login
+        } else {
+          alert(data.message || 'Erro ao realizar cadastro.');
+        }
+      } catch (error) {
+        alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');
+        console.error('Erro:', error);
+      }
+    });
+  </script>
+</body>
+</html>

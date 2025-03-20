@@ -1,6 +1,6 @@
 // backend/firebaseAdmin.js
 const admin = require('firebase-admin');
-const serviceAccount = require('./serviceAccountKey.json'); // Caminho para o arquivo de credenciais
+const serviceAccount = require('./serviceAccountKey.json'); // Certifique-se de que este arquivo existe e está correto
 
 // Inicializa o Firebase Admin SDK
 admin.initializeApp({

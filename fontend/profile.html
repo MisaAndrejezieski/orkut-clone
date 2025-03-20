@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miskut - Perfil</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 style="color: #FF69B4;">Bem-vindo ao seu perfil!</h1>
+    <p id="user-info">Carregando informações do usuário...</p>
+    <button id="logout-button">Sair</button>
+  </div>
+  <script>
+    // Simula a recuperação de informações do usuário
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = JSON.parse(localStorage.getItem('user')) || { name: 'Usuário', email: 'email@example.com' };
+      document.getElementById('user-info').innerText = `Nome: ${userInfo.name}\nE-mail: ${userInfo.email}`;
+    });
+
+    // Logout
+    document.getElementById('logout-button').addEventListener('click', () => {
+      localStorage.removeItem('user'); // Remove informações do usuário
+      alert('Você saiu com sucesso!');
+      window.location.href = 'index.html'; // Redireciona para a página de login
+    });
+  </script>
+</body>
+</html>

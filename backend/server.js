@@ -72,3 +72,22 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API do Orkut Clone',
+            version: '1.0.0',
+            description: 'Documentação da API do Orkut Clone',
+        },
+        servers: [{ url: 'http://localhost:5000' }],
+    },
+    apis: ['./routes/*.js'], // Caminho para os arquivos de rotas
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));

@@ -63,3 +63,12 @@ app.use((err, req, res, next) => {
 
 const helmet = require('helmet');
 app.use(helmet());
+
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100, // Limite de 100 requisições por IP
+});
+
+app.use(limiter);

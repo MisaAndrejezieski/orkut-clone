@@ -45,3 +45,6 @@ app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
 
 const testimonialRoutes = require('./routes/testimonialRoutes');
 app.use('/api/testimonials', testimonialRoutes);
+
+const communityRoutes = require('./routes/communityRoutes');
+app.use('/api/communities', communityRoutes);

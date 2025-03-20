@@ -15,7 +15,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     width: 100%;
-    max-width: 400px; /* Limita a largura máxima */
+    max-width: 500px; /* Alterado para 500px para maior largura em telas maiores */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra mais visível */
     text-align: center;
     font-size: 14px;

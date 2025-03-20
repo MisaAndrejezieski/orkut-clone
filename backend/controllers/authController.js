@@ -3,11 +3,18 @@ const { admin } = require('../firebaseAdmin');
 
 // Registro de usuário
 const register = async (req, res) => {
-    const { email, password, name } = req.body; // Adicionar nome ao registro
+    const { email, password, name } = req.body;
     if (!email || !password || !name) {
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
     try {
+        // Verifica se o e-mail já está registrado
+        const existingUser = await admin.auth().getUserByEmail(email).catch(() => null);
+        if (existingUser) {
+            return res.status(400).json({ message: 'E-mail já está em uso.' });
+        }
+
+        // Cria o usuário no Firebase Authentication
         const userRecord = await admin.auth().createUser({
             email,
             password,
@@ -17,12 +24,13 @@ const register = async (req, res) => {
         await admin.firestore().collection('users').doc(userRecord.uid).set({
             email,
             name,
+            role: 'user', // Define o papel padrão como "user"
             createdAt: admin.firestore.Timestamp.now(),
         });
 
-        res.status(201).json({ uid: userRecord.uid });
+        res.status(201).json({ uid: userRecord.uid, message: 'Usuário registrado com sucesso!' });
     } catch (error) {
-        res.status(400).json({ message: 'Erro ao registrar usuário: ' + error.message });
+        res.status(500).json({ message: 'Erro ao registrar usuário: ' + error.message });
     }
 };
 
@@ -31,9 +39,9 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const userRecord = await admin.auth().getUserByEmail(email);
-        res.json({ uid: userRecord.uid });
+        res.json({ uid: userRecord.uid, email: userRecord.email });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: 'Credenciais inválidas.' });
     }
 };
 

@@ -29,7 +29,7 @@ app.use('/api/friends', friendRoutes);
 const createAdminUser = async () => {
     try {
         const uid = 'XZqtcAuAilVuxkfcmTLo3YxPzo53'; // UID fornecido
-        const email = 'misamisa';
+        const email = 'misamisa@example.com'; // Adicione um domínio válido
         const password = '#Sonho1313';
         const name = 'Administrador';
 
@@ -65,5 +65,5 @@ const createAdminUser = async () => {
 createAdminUser();
 
 // Inicia o servidor
-const PORT = process.env.PORT || 5500; // Alterado para 5500
+const PORT = process.env.PORT || 5500;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

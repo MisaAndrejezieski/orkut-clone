@@ -43,7 +43,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          alert('Cadastro realizado com sucesso! Faça login para continuar.');
+          alert(data.message || 'Cadastro realizado com sucesso! Faça login para continuar.');
           window.location.href = 'index.html'; // Redireciona para a página de login
         } else {
           alert(data.message || 'Erro ao realizar cadastro.');

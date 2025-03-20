@@ -62,8 +62,13 @@ const createAdminUser = async () => {
 };
 
 // Chama a função para criar o administrador
-createAdminUser();
+createAdminUser().catch((error) => {
+    console.error('Erro ao inicializar o administrador:', error.message);
+});
 
 // Inicia o servidor
 const PORT = process.env.PORT || 5500;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}. Acesse http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}. Acesse http://localhost:${PORT}`))
+    .on('error', (err) => {
+        console.error('Erro ao iniciar o servidor:', err.message);
+    });

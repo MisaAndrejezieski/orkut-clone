@@ -44,7 +44,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Usuário padrão para acesso direto
         let user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             user = { name: 'Usuário Padrão', email: 'usuario@miskut.com', profilePic: 'default-profile.png' };
@@ -55,7 +54,6 @@
         document.getElementById('user-email').innerText = `E-mail: ${user.email}`;
         document.getElementById('profile-pic').src = user.profilePic;
 
-        // Carregar amigos
         const friends = JSON.parse(localStorage.getItem('friends')) || [];
         const friendsList = document.getElementById('friends-list');
         friendsList.innerHTML = '';
@@ -65,7 +63,6 @@
             friendsList.appendChild(li);
         });
 
-        // Carregar scraps
         const scraps = JSON.parse(localStorage.getItem('scraps')) || [];
         const scrapsDiv = document.getElementById('scraps');
         scrapsDiv.innerHTML = '';
@@ -75,7 +72,6 @@
             scrapsDiv.appendChild(p);
         });
 
-        // Carregar depoimentos
         const testimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
         const testimonialsDiv = document.getElementById('testimonials');
         testimonialsDiv.innerHTML = '';

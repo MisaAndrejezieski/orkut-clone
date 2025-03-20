@@ -5,9 +5,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 100vh; /* Garante que o conteúdo ocupe a altura mínima */
+    min-height: 100vh;
     margin: 0;
-    padding: 20px; /* Adiciona espaçamento em telas menores */
+    padding: 20px;
 }
 
 .container {

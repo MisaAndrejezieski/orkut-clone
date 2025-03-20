@@ -5,10 +5,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: auto; /* Ajuste para evitar problemas em telas menores */
     min-height: 100vh; /* Garante que o conteúdo ocupe a altura mínima */
-    padding: 10px; /* Adiciona espaçamento em telas menores */
     margin: 0;
+    padding: 10px; /* Adiciona espaçamento em telas menores */
 }
 
 .container {
@@ -32,7 +31,7 @@ a:hover {
     text-decoration: underline;
 }
 
-input {
+input, textarea {
     display: block;
     width: 100%;
     padding: 10px;

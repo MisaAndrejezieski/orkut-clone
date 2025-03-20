@@ -1,4 +1,4 @@
-document.getElementById('login-form').addEventListener('submit', async (e) => {
+document.getElementById('login-form').addEventListener('submit', (e) => {
     e.preventDefault();
 
     const email = document.getElementById('email').value.trim();
@@ -9,25 +9,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         return;
     }
 
-    try {
-        const response = await fetch('http://localhost:5500/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find((u) => u.email === email && u.password === password);
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            alert(errorData.message || 'Erro ao fazer login. Verifique suas credenciais.');
-            return;
-        }
-
-        const data = await response.json();
+    if (user) {
         alert('Login bem-sucedido!');
-        localStorage.setItem('user', JSON.stringify(data)); // Salva informações do usuário
-        window.location.href = 'profile.html'; // Redireciona para o perfil
-    } catch (error) {
-        alert('Erro ao conectar ao servidor. Verifique se o backend está rodando.');
-        console.error('Erro:', error);
+        localStorage.setItem('user', JSON.stringify(user));
+        window.location.href = 'profile.html';
+    } else {
+        alert('E-mail ou senha inválidos.');
     }
 });

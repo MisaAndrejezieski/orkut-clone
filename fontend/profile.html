@@ -14,13 +14,6 @@
 
     <hr>
 
-    <h2>Amigos</h2>
-    <ul id="friends-list">
-      <li>Carregando amigos...</li>
-    </ul>
-
-    <hr>
-
     <h2>Scraps</h2>
     <div id="scraps">
       <p>Carregando scraps...</p>
@@ -29,124 +22,51 @@
       <textarea id="scrap-content" placeholder="Deixe um recado..." required></textarea>
       <button type="submit">Enviar Scrap</button>
     </form>
-
-    <hr>
-
-    <h2>Depoimentos</h2>
-    <div id="testimonials">
-      <p>Carregando depoimentos...</p>
-    </div>
-
-    <hr>
-
-    <h2>Comunidades</h2>
-    <ul id="communities-list">
-      <li>Carregando comunidades...</li>
-    </ul>
   </div>
 
   <script>
-    // Carregar informações do usuário
-    document.addEventListener('DOMContentLoaded', async () => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user) {
-        alert('Você precisa estar logado para acessar o perfil.');
-        window.location.href = 'index.html';
-        return;
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            alert('Você precisa estar logado para acessar o perfil.');
+            window.location.href = 'index.html';
+            return;
+        }
 
-      document.getElementById('user-name').innerText = user.name || 'Usuário';
-      document.getElementById('user-email').innerText = `E-mail: ${user.email}`;
+        document.getElementById('user-name').innerText = user.name;
+        document.getElementById('user-email').innerText = `E-mail: ${user.email}`;
 
-      // Carregar amigos
-      try {
-        const friendsResponse = await fetch(`http://localhost:5500/api/friends`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        const friends = await friendsResponse.json();
-        const friendsList = document.getElementById('friends-list');
-        friendsList.innerHTML = '';
-        friends.forEach(friend => {
-          const li = document.createElement('li');
-          li.innerText = friend.name;
-          friendsList.appendChild(li);
-        });
-      } catch (error) {
-        console.error('Erro ao carregar amigos:', error);
-      }
-
-      // Carregar scraps
-      try {
-        const scrapsResponse = await fetch(`http://localhost:5500/api/scraps`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        const scraps = await scrapsResponse.json();
+        const scraps = JSON.parse(localStorage.getItem('scraps')) || [];
         const scrapsDiv = document.getElementById('scraps');
         scrapsDiv.innerHTML = '';
-        scraps.forEach(scrap => {
-          const p = document.createElement('p');
-          p.innerText = `${scrap.author}: ${scrap.content}`;
-          scrapsDiv.appendChild(p);
+        scraps.forEach((scrap) => {
+            const p = document.createElement('p');
+            p.innerText = `${scrap.author}: ${scrap.content}`;
+            scrapsDiv.appendChild(p);
         });
-      } catch (error) {
-        console.error('Erro ao carregar scraps:', error);
-      }
-
-      // Carregar depoimentos
-      try {
-        const testimonialsResponse = await fetch(`http://localhost:5500/api/testimonials`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        const testimonials = await testimonialsResponse.json();
-        const testimonialsDiv = document.getElementById('testimonials');
-        testimonialsDiv.innerHTML = '';
-        testimonials.forEach(testimonial => {
-          const p = document.createElement('p');
-          p.innerText = `${testimonial.author}: ${testimonial.content}`;
-          testimonialsDiv.appendChild(p);
-        });
-      } catch (error) {
-        console.error('Erro ao carregar depoimentos:', error);
-      }
     });
 
-    // Enviar scrap
-    document.getElementById('scrap-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = JSON.parse(localStorage.getItem('user'));
-      const content = document.getElementById('scrap-content').value.trim();
+    document.getElementById('scrap-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const user = JSON.parse(localStorage.getItem('user'));
+        const content = document.getElementById('scrap-content').value.trim();
 
-      if (!content) {
-        alert('O conteúdo do scrap não pode estar vazio.');
-        return;
-      }
-
-      try {
-        const response = await fetch(`http://localhost:5500/api/scraps`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({ content }),
-        });
-
-        if (response.ok) {
-          alert('Scrap enviado com sucesso!');
-          window.location.reload();
-        } else {
-          alert('Erro ao enviar scrap.');
+        if (!content) {
+            alert('O conteúdo do scrap não pode estar vazio.');
+            return;
         }
-      } catch (error) {
-        console.error('Erro ao enviar scrap:', error);
-      }
+
+        const scraps = JSON.parse(localStorage.getItem('scraps')) || [];
+        scraps.push({ author: user.name, content });
+        localStorage.setItem('scraps', JSON.stringify(scraps));
+        alert('Scrap enviado com sucesso!');
+        window.location.reload();
     });
 
-    // Logout
     document.getElementById('logout-button').addEventListener('click', () => {
-      localStorage.removeItem('user');
-      alert('Você saiu com sucesso!');
-      window.location.href = 'index.html';
+        localStorage.removeItem('user');
+        alert('Você saiu com sucesso!');
+        window.location.href = 'index.html';
     });
   </script>
 </body>

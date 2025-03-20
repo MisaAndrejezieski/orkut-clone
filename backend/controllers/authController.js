@@ -1,30 +1,22 @@
 // backend/controllers/authController.js
 const { admin } = require('../firebaseAdmin');
 
-// Registro de usuário
 const register = async (req, res) => {
     const { email, password, name } = req.body;
     if (!email || !password || !name) {
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
     try {
-        // Verifica se o e-mail já está registrado
         const existingUser = await admin.auth().getUserByEmail(email).catch(() => null);
         if (existingUser) {
             return res.status(400).json({ message: 'E-mail já está em uso.' });
         }
 
-        // Cria o usuário no Firebase Authentication
-        const userRecord = await admin.auth().createUser({
-            email,
-            password,
-        });
-
-        // Salvar dados do usuário no Firestore
+        const userRecord = await admin.auth().createUser({ email, password });
         await admin.firestore().collection('users').doc(userRecord.uid).set({
             email,
             name,
-            role: 'user', // Define o papel padrão como "user"
+            role: 'user',
             createdAt: admin.firestore.Timestamp.now(),
         });
 
@@ -35,7 +27,6 @@ const register = async (req, res) => {
     }
 };
 
-// Login de usuário
 const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {

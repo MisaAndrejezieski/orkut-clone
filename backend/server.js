@@ -1,6 +1,9 @@
 const express = require('express');
 const authRoutes = require('./routes/authRoutes');
 const scrapRoutes = require('./routes/scrapRoutes');
+const testimonialRoutes = require('./routes/testimonialRoutes');
+const communityRoutes = require('./routes/communityRoutes');
+const friendRoutes = require('./routes/friendRoutes');
 const path = require('path');
 const { admin } = require('./firebaseAdmin');
 
@@ -15,12 +18,6 @@ app.use(express.static(path.join(__dirname, '../fontend')));
 // Rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/scraps', scrapRoutes);
-
-const testimonialRoutes = require('./routes/testimonialRoutes');
-const communityRoutes = require('./routes/communityRoutes');
-const friendRoutes = require('./routes/friendRoutes');
-
-// Rotas adicionais
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/communities', communityRoutes);
 app.use('/api/friends', friendRoutes);
@@ -28,30 +25,21 @@ app.use('/api/friends', friendRoutes);
 // Criar usuário administrador automaticamente
 const createAdminUser = async () => {
     try {
-        const uid = 'XZqtcAuAilVuxkfcmTLo3YxPzo53'; // UID fornecido
-        const email = 'misamisa@example.com'; // Adicione um domínio válido
+        const uid = 'XZqtcAuAilVuxkfcmTLo3YxPzo53';
+        const email = 'misamisa@example.com';
         const password = '#Sonho1313';
         const name = 'Administrador';
 
-        // Verifica se o usuário já existe no Firebase Authentication
         const userRecord = await admin.auth().getUser(uid).catch(() => null);
 
         if (!userRecord) {
-            // Cria o usuário no Firebase Authentication com o UID fornecido
-            const newUser = await admin.auth().createUser({
-                uid,
-                email,
-                password,
-            });
-
-            // Salva os dados no Firestore com a role de admin
+            const newUser = await admin.auth().createUser({ uid, email, password });
             await admin.firestore().collection('users').doc(newUser.uid).set({
                 email,
                 name,
                 role: 'admin',
                 createdAt: admin.firestore.Timestamp.now(),
             });
-
             console.log('Usuário administrador criado com sucesso!');
         } else {
             console.log('Usuário administrador já existe.');
@@ -61,7 +49,6 @@ const createAdminUser = async () => {
     }
 };
 
-// Chama a função para criar o administrador
 createAdminUser().catch((error) => {
     console.error('Erro ao inicializar o administrador:', error.message);
 });

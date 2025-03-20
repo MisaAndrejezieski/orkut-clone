@@ -36,6 +36,13 @@
     <div id="testimonials">
       <p>Carregando depoimentos...</p>
     </div>
+
+    <hr>
+
+    <h2>Comunidades</h2>
+    <ul id="communities-list">
+      <li>Carregando comunidades...</li>
+    </ul>
   </div>
 
   <script>
@@ -65,3 +72,82 @@
           friendsList.appendChild(li);
         });
       } catch (error) {
+        console.error('Erro ao carregar amigos:', error);
+      }
+
+      // Carregar scraps
+      try {
+        const scrapsResponse = await fetch(`http://localhost:5500/api/scraps`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        const scraps = await scrapsResponse.json();
+        const scrapsDiv = document.getElementById('scraps');
+        scrapsDiv.innerHTML = '';
+        scraps.forEach(scrap => {
+          const p = document.createElement('p');
+          p.innerText = `${scrap.author}: ${scrap.content}`;
+          scrapsDiv.appendChild(p);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar scraps:', error);
+      }
+
+      // Carregar depoimentos
+      try {
+        const testimonialsResponse = await fetch(`http://localhost:5500/api/testimonials`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        const testimonials = await testimonialsResponse.json();
+        const testimonialsDiv = document.getElementById('testimonials');
+        testimonialsDiv.innerHTML = '';
+        testimonials.forEach(testimonial => {
+          const p = document.createElement('p');
+          p.innerText = `${testimonial.author}: ${testimonial.content}`;
+          testimonialsDiv.appendChild(p);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar depoimentos:', error);
+      }
+    });
+
+    // Enviar scrap
+    document.getElementById('scrap-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = JSON.parse(localStorage.getItem('user'));
+      const content = document.getElementById('scrap-content').value.trim();
+
+      if (!content) {
+        alert('O conteúdo do scrap não pode estar vazio.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5500/api/scraps`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({ content }),
+        });
+
+        if (response.ok) {
+          alert('Scrap enviado com sucesso!');
+          window.location.reload();
+        } else {
+          alert('Erro ao enviar scrap.');
+        }
+      } catch (error) {
+        console.error('Erro ao enviar scrap:', error);
+      }
+    });
+
+    // Logout
+    document.getElementById('logout-button').addEventListener('click', () => {
+      localStorage.removeItem('user');
+      alert('Você saiu com sucesso!');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

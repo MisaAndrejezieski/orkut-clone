@@ -8,9 +8,20 @@
 </head>
 <body>
   <div class="container">
-    <h1 style="color: #FF69B4;">Perfil de <span id="user-name">Usuário</span></h1>
-    <p id="user-email">E-mail: carregando...</p>
-    <button id="logout-button">Sair</button>
+    <div class="profile-header">
+      <img src="default-profile.png" alt="Foto de Perfil" id="profile-pic">
+      <div>
+        <h1 id="user-name">Usuário Padrão</h1>
+        <p id="user-email">E-mail: usuario@miskut.com</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2>Amigos</h2>
+    <ul id="friends-list">
+      <li>Carregando amigos...</li>
+    </ul>
 
     <hr>
 
@@ -22,20 +33,39 @@
       <textarea id="scrap-content" placeholder="Deixe um recado..." required></textarea>
       <button type="submit">Enviar Scrap</button>
     </form>
+
+    <hr>
+
+    <h2>Depoimentos</h2>
+    <div id="testimonials">
+      <p>Carregando depoimentos...</p>
+    </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const user = JSON.parse(localStorage.getItem('user'));
+        // Usuário padrão para acesso direto
+        let user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
-            alert('Você precisa estar logado para acessar o perfil.');
-            window.location.href = 'index.html';
-            return;
+            user = { name: 'Usuário Padrão', email: 'usuario@miskut.com', profilePic: 'default-profile.png' };
+            localStorage.setItem('user', JSON.stringify(user));
         }
 
         document.getElementById('user-name').innerText = user.name;
         document.getElementById('user-email').innerText = `E-mail: ${user.email}`;
+        document.getElementById('profile-pic').src = user.profilePic;
 
+        // Carregar amigos
+        const friends = JSON.parse(localStorage.getItem('friends')) || [];
+        const friendsList = document.getElementById('friends-list');
+        friendsList.innerHTML = '';
+        friends.forEach((friend) => {
+            const li = document.createElement('li');
+            li.innerText = friend.name;
+            friendsList.appendChild(li);
+        });
+
+        // Carregar scraps
         const scraps = JSON.parse(localStorage.getItem('scraps')) || [];
         const scrapsDiv = document.getElementById('scraps');
         scrapsDiv.innerHTML = '';
@@ -43,6 +73,16 @@
             const p = document.createElement('p');
             p.innerText = `${scrap.author}: ${scrap.content}`;
             scrapsDiv.appendChild(p);
+        });
+
+        // Carregar depoimentos
+        const testimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
+        const testimonialsDiv = document.getElementById('testimonials');
+        testimonialsDiv.innerHTML = '';
+        testimonials.forEach((testimonial) => {
+            const p = document.createElement('p');
+            p.innerText = `${testimonial.author}: ${testimonial.content}`;
+            testimonialsDiv.appendChild(p);
         });
     });
 
@@ -61,12 +101,6 @@
         localStorage.setItem('scraps', JSON.stringify(scraps));
         alert('Scrap enviado com sucesso!');
         window.location.reload();
-    });
-
-    document.getElementById('logout-button').addEventListener('click', () => {
-        localStorage.removeItem('user');
-        alert('Você saiu com sucesso!');
-        window.location.href = 'index.html';
     });
   </script>
 </body>

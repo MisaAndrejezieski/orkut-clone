@@ -1,93 +1,55 @@
-// Importa o framework Express para criar o servidor
 const express = require('express');
-
-// Importa o CORS para permitir requisições de diferentes origens (útil para o frontend)
-const cors = require('cors');
-
-// Importa o dotenv para gerenciar variáveis de ambiente (como a conexão com o banco de dados)
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
-// Importa a função connectDB para conectar ao banco de dados MongoDB
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const authRoutes = require('./routes/authRoutes');
+const scrapRoutes = require('./routes/scrapRoutes');
+const testimonialRoutes = require('./routes/testimonialRoutes');
+const communityRoutes = require('./routes/communityRoutes');
+const friendRoutes = require('./routes/friendRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 const connectDB = require('./config/db');
 
-// Importa as rotas de autenticação
-const authRoutes = require('./routes/authRoutes');
-
-// Importa as rotas de scraps
-const scrapRoutes = require('./routes/scrapRoutes');
-
-// Carrega as variáveis de ambiente do arquivo .env
+// Carrega as variáveis de ambiente
 dotenv.config();
 
-// Conecta ao banco de dados MongoDB
+// Conecta ao MongoDB
 connectDB();
 
 // Cria uma instância do Express
 const app = express();
 
-// Habilita o CORS para permitir requisições do frontend
-app.use(cors());
+// Middlewares
+app.use(helmet()); // Protege cabeçalhos HTTP
+app.use(express.json()); // Habilita o uso de JSON no corpo das requisições
 
-// Habilita o uso de JSON no corpo das requisições
-app.use(express.json());
-
-// Define as rotas de autenticação (registro e login)
-app.use('/api/auth', authRoutes);
-
-// Define as rotas de scraps (criar e listar scraps)
-app.use('/api/scraps', scrapRoutes);
-
-// Define a porta do servidor (usando a variável de ambiente PORT ou a porta 5000 como fallback)
-const PORT = process.env.PORT || 5000;
-
-// Inicia o servidor e escuta na porta definida
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
-
-const testimonialRoutes = require('./routes/testimonialRoutes');
-app.use('/api/testimonials', testimonialRoutes);
-
-const communityRoutes = require('./routes/communityRoutes');
-app.use('/api/communities', communityRoutes);
-
-const friendRoutes = require('./routes/friendRoutes');
-app.use('/api/friends', friendRoutes);
-
-const messageRoutes = require('./routes/messageRoutes');
-app.use('/api/messages', messageRoutes);
-
-// Middleware de tratamento de erros global
-app.use((err, req, res, next) => {
-    console.error(err.stack); // Log do erro no console
-    res.status(500).json({ message: 'Erro no servidor.' });
-});
-
-const helmet = require('helmet');
-app.use(helmet());
-
-const rateLimit = require('express-rate-limit');
-
+// Limita o número de requisições por IP
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 100, // Limite de 100 requisições por IP
 });
-
 app.use(limiter);
 
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+// Rotas
+app.use('/api/auth', authRoutes);
+app.use('/api/scraps', scrapRoutes);
+app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/communities', communityRoutes);
+app.use('/api/friends', friendRoutes);
+app.use('/api/messages', messageRoutes);
 
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'API do Orkut Clone',
-            version: '1.0.0',
-            description: 'Documentação da API do Orkut Clone',
-        },
-        servers: [{ url: 'http://localhost:5000' }],
-    },
-    apis: ['./routes/*.js'], // Caminho para os arquivos de rotas
-};
+// Middleware de tratamento de erros global
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Erro no servidor.' });
+});
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// Exporta o app para uso nos testes
+module.exports = app;
+
+// Inicia o servidor apenas se o arquivo for executado diretamente
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+}

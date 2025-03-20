@@ -1,27 +1,34 @@
-const Scrap = require('../models/Scrap');
+// backend/controllers/scrapController.js
+const { db } = require('../firebaseAdmin');
 
-// Função para criar um scrap
+// Criar scrap
 const createScrap = async (req, res) => {
     const { content } = req.body;
+    const userId = req.user.uid; // ID do usuário autenticado
     try {
-        const scrap = new Scrap({
+        const scrap = {
             content,
-            user: req.user.userId, // Usuário autenticado
-        });
-        await scrap.save();
-        res.status(201).json(scrap);
+            userId,
+            createdAt: admin.firestore.Timestamp.now(),
+        };
+        const docRef = await db.collection('scraps').add(scrap);
+        res.status(201).json({ id: docRef.id });
     } catch (error) {
-        res.status(500).json({ message: 'Erro no servidor.' });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Função para listar scraps
+// Listar scraps
 const getScraps = async (req, res) => {
     try {
-        const scraps = await Scrap.find().populate('user', 'name');
+        const scrapsSnapshot = await db.collection('scraps').get();
+        const scraps = [];
+        scrapsSnapshot.forEach((doc) => {
+            scraps.push({ id: doc.id, ...doc.data() });
+        });
         res.json(scraps);
     } catch (error) {
-        res.status(500).json({ message: 'Erro no servidor.' });
+        res.status(500).json({ message: error.message });
     }
 };
 

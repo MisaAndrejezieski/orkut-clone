@@ -25,4 +25,5 @@ router.post(
     }
 );
 
+module.exports = { createScrap, getScraps };
 module.exports = router;
